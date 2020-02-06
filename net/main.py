@@ -40,7 +40,7 @@ def train(net,loader_train,loader_test,optim,criterion):
 	ssims=[]
 	psnrs=[]
 	if opt.resume and os.path.exists(opt.model_dir):
-		print(f'resume from {opt.model_dir}')
+		print('resume from {}'.format(opt.model_dir))
 		ckp=torch.load(opt.model_dir)
 		losses=ckp['losses']
 		net.load_state_dict(ckp['model'])
@@ -49,7 +49,7 @@ def train(net,loader_train,loader_test,optim,criterion):
 		max_psnr=ckp['max_psnr']
 		psnrs=ckp['psnrs']
 		ssims=ckp['ssims']
-		print(f'start_step:{start_step} start training ---')
+		print('start_step:{} start training ---'.format(start_step))
 	else :
 		print('train from scratch *** ')
 	for step in range(start_step+1,opt.steps+1):
@@ -72,8 +72,8 @@ def train(net,loader_train,loader_test,optim,criterion):
 		optim.step()
 		optim.zero_grad()
 		losses.append(loss.item())
-		print(f'\rtrain loss : {loss.item():.5f}| step :{step}/{opt.steps}|lr :{lr :.7f} |time_used :{(time.time()-start_time)/60 :.1f}',end='',flush=True)
-
+		# print(f'\rtrain loss : {loss.item():.5f}| step :{step}/{opt.steps}|lr :{lr :.7f} |time_used :{(time.time()-start_time)/60 :.1f}',end='',flush=True)
+		print('\rtrain loss : {}| step:{}/{}|lr :{} |time_used :{}'.format(loss.item(), step, opt.steps, lr, (time.time()-start_time)/60))
 		#with SummaryWriter(logdir=log_dir,comment=log_dir) as writer:
 		#	writer.add_scalar('data/loss',loss,step)
 
@@ -81,7 +81,8 @@ def train(net,loader_train,loader_test,optim,criterion):
 			with torch.no_grad():
 				ssim_eval,psnr_eval=test(net,loader_test, max_psnr,max_ssim,step)
 
-			print(f'\nstep :{step} |ssim:{ssim_eval:.4f}| psnr:{psnr_eval:.4f}')
+			# print(f'\nstep :{step} |ssim:{ssim_eval:.4f}| psnr:{psnr_eval:.4f}')
+			print('\nstep :{} |ssim:{}| psnr:{}'.format(step, ssim_eval, pnsr_eval))
 
 			# with SummaryWriter(logdir=log_dir,comment=log_dir) as writer:
 			# 	writer.add_scalar('data/ssim',ssim_eval,step)
@@ -105,11 +106,15 @@ def train(net,loader_train,loader_test,optim,criterion):
 							'losses':losses,
 							'model':net.state_dict()
 				},opt.model_dir)
-				print(f'\n model saved at step :{step}| max_psnr:{max_psnr:.4f}|max_ssim:{max_ssim:.4f}')
+				# print(f'\n model saved at step :{step}| max_psnr:{max_psnr:.4f}|max_ssim:{max_ssim:.4f}')
+				print('\n model saved at step :{}| max_psnr:{}|max_ssim:{}'.format(step, max_pnsr, max_ssim))
 
-	np.save(f'./numpy_files/{model_name}_{opt.steps}_losses.npy',losses)
-	np.save(f'./numpy_files/{model_name}_{opt.steps}_ssims.npy',ssims)
-	np.save(f'./numpy_files/{model_name}_{opt.steps}_psnrs.npy',psnrs)
+	#np.save(f'./numpy_files/{model_name}_{opt.steps}_losses.npy',losses)
+	#np.save(f'./numpy_files/{model_name}_{opt.steps}_ssims.npy',ssims)
+	#np.save(f'./numpy_files/{model_name}_{opt.steps}_psnrs.npy',psnrs)
+	np.save('./numpy_files/{}_{}_losses.npy'.format(model_name, opt.steps),losses)
+	np.save('./numpy_files/{}_{}_ssims.npy'.format(model_name, opt.steps),ssims)
+	np.save('./numpy_files/{}_{}_psnrs.npy'.format(model_name, opt.steps),psnrs)
 
 def test(net,loader_test,max_psnr,max_ssim,step):
 	net.eval()

@@ -78,7 +78,8 @@ class RESIDE_Dataset(data.Dataset):
 import os
 pwd=os.getcwd()
 print(pwd)
-path='/home/zhilin007/VS/FFA-Net/data'#path to your 'data' folder
+# path='/home/zhilin007/VS/FFA-Net/data'#path to your 'data' folder
+path='/workspace/data'
 
 ITS_train_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/ITS',train=True,size=crop_size),batch_size=BS,shuffle=True)
 ITS_test_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/SOTS/indoor',train=False,size='whole img'),batch_size=1,shuffle=False)

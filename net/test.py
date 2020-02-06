@@ -39,7 +39,8 @@ net=nn.DataParallel(net)
 net.load_state_dict(ckp['model'])
 net.eval()
 for im in os.listdir(img_dir):
-    print(f'\r {im}',end='',flush=True)
+    # print(f'\r {im}',end='',flush=True)
+    print('\r {}'.format(im),end='',flush=True)
     haze = Image.open(img_dir+im)
     haze1= tfs.Compose([
         tfs.ToTensor(),

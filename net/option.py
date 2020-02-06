@@ -21,7 +21,7 @@ parser.add_argument('--testset',type=str,default='its_test')
 parser.add_argument('--net',type=str,default='ffa')
 parser.add_argument('--gps',type=int,default=3,help='residual_groups')
 parser.add_argument('--blocks',type=int,default=20,help='residual_blocks')
-parser.add_argument('--bs',type=int,default=16,help='batch size')
+parser.add_argument('--bs',type=int,default=2,help='batch size')
 parser.add_argument('--crop',action='store_true')
 parser.add_argument('--crop_size',type=int,default=240,help='Takes effect when using --crop ')
 parser.add_argument('--no_lr_sche',action='store_true',help='no lr cos schedule')
@@ -45,7 +45,11 @@ if not os.path.exists('logs'):
 	os.mkdir('logs')
 if not os.path.exists('samples'):
 	os.mkdir('samples')
+'''
 if not os.path.exists(f"samples/{model_name}"):
 	os.mkdir(f'samples/{model_name}')
+'''
+if not os.path.exists("samples/{}".format(model_name)):
+	os.mkdir('samples/{}'.format(model_name))
 if not os.path.exists(log_dir):
 	os.mkdir(log_dir)
