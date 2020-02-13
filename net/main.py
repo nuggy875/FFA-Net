@@ -21,8 +21,8 @@ models_={
 	'ffa':FFA(gps=opt.gps,blocks=opt.blocks),
 }
 loaders_={
-	'its_train':ITS_train_loader,
-	'its_test':ITS_test_loader,
+	#'its_train':ITS_train_loader,
+	#'its_test':ITS_test_loader,
 	'ots_train':OTS_train_loader,
 	'ots_test':OTS_test_loader
 }
@@ -145,9 +145,11 @@ if __name__ == "__main__":
 	loader_test=loaders_[opt.testset]
 	net=models_[opt.net]
 	net=net.to(opt.device)
+	'''
 	if opt.device=='cuda':
 		net=torch.nn.DataParallel(net)
 		cudnn.benchmark=True
+	'''
 	criterion = []
 	criterion.append(nn.L1Loss().to(opt.device))
 	if opt.perloss:
@@ -159,5 +161,6 @@ if __name__ == "__main__":
 	optimizer = optim.Adam(params=filter(lambda x: x.requires_grad, net.parameters()),lr=opt.lr, betas = (0.9, 0.999), eps=1e-08)
 	optimizer.zero_grad()
 	train(net,loader_train,loader_test,optimizer,criterion)
+	
 	
 
