@@ -20,13 +20,13 @@ def tensorShow(tensors,titles=['haze']):
         plt.show()
 
 parser=argparse.ArgumentParser()
-parser.add_argument('--task',type=str,default='its',help='its or ots')
-parser.add_argument('--test_imgs',type=str,default='test_imgs',help='Test imgs folder')
+parser.add_argument('--task',type=str,default='ots',help='its or ots')
+parser.add_argument('--test_imgs',type=str,default='/data/data/RESIDE/RTTS/JPEGImages',help='Test imgs folder')
 opt=parser.parse_args()
 dataset=opt.task
 gps=3
 blocks=19
-img_dir=abs+opt.test_imgs+'/'
+img_dir=opt.test_imgs+'/'
 output_dir=abs+f'pred_FFA_{dataset}/'
 print("pred_dir:",output_dir)
 if not os.path.exists(output_dir):
@@ -38,9 +38,13 @@ net=FFA(gps=gps,blocks=blocks)
 net=nn.DataParallel(net)
 net.load_state_dict(ckp['model'])
 net.eval()
-for im in os.listdir(img_dir):
+img_list = sorted(os.listdir(img_dir))
+
+for num, im in enumerate(img_list):
     # print(f'\r {im}',end='',flush=True)
-    print('\r {}'.format(im),end='',flush=True)
+    print(num)
+    print('\r {}'.format(im))
+    #print('\r {}'.format(im),end='',flush=True)
     haze = Image.open(img_dir+im)
     haze1= tfs.Compose([
         tfs.ToTensor(),
